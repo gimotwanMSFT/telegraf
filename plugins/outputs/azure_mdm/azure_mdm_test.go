@@ -70,6 +70,4 @@ func TestAzureMdm_Connect(t *testing.T) {
 
 	expected := "{\"Account\":\"testAccount\",\"Namespace\":\"testNamespace\",\"Metric\":\"test.value\",\"Dims\":{\"tag1\":\"value1\"}}:1|g"
 	assert.Equal(t, mstrins[0], expected)
-	//metric1Out := "Account"
-	//assert.Equal(t, string(buf), metric1Out)
 }
