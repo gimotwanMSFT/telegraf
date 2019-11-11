@@ -31,7 +31,7 @@ type azureMdmData struct {
 }
 
 type azureMdmMetric struct {
-	Data  azureMdmData
+	azureMdmData
 	Value int64
 }
 
@@ -82,7 +82,7 @@ func (mdm *AzureMdm) Write(metrics []telegraf.Metric) error {
 
 		for _, azm := range azureMetrics {
 			// send the metric to mdm extension
-			b, err := json.Marshal(azm.Data)
+			b, err := json.Marshal(azm.azureMdmData)
 			if err != nil {
 				log.Printf("Error while marshalling metric %#v", err)
 				return fmt.Errorf("Error while marshalling metric %#v", err)
@@ -131,17 +131,14 @@ func (mdm *AzureMdm) translate(m telegraf.Metric) ([]azureMdmMetric, error) {
 		metricName := m.Name() + "." + field.Key
 
 		if value, ok := field.Value.(int64); ok {
-
-			azmData := azureMdmData{
-				Account:   account,
-				Namespace: namespace,
-				Metric:    metricName,
-				Dims:      dims,
-			}
-
 			azm := azureMdmMetric{
-				Data:  azmData,
-				Value: value,
+				azureMdmData{
+					Account:   account,
+					Namespace: namespace,
+					Metric:    metricName,
+					Dims:      dims,
+				},
+				value,
 			}
 
 			// now append it to the list of metrics to be emitted
